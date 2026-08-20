@@ -350,6 +350,7 @@ Item {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             text: root.filterText || " search anything…"
+            textFormat: Text.PlainText
             color: root.foreground
             opacity: root.filterText ? 1 : 0.58
             font.family: root.fontFamily
@@ -410,6 +411,7 @@ Item {
                     visible: row.iconImage.length === 0
                     anchors.centerIn: parent
                     text: row.iconGlyph
+                    textFormat: Text.PlainText
                     color: row.hasCursor ? root.selectedText : root.foreground
                     font.family: root.fontFamily
                     font.pixelSize: Style.font.title
@@ -424,6 +426,7 @@ Item {
                   Text {
                     width: parent.width
                     text: row.primary
+                    textFormat: Text.PlainText
                     color: row.hasCursor ? root.selectedText : root.foreground
                     font.family: root.fontFamily
                     font.pixelSize: Style.font.title
@@ -434,6 +437,7 @@ Item {
                     visible: row.secondary.length > 0
                     width: parent.width
                     text: row.secondary
+                    textFormat: Text.PlainText
                     color: row.hasCursor ? root.selectedText : root.foreground
                     opacity: 0.6
                     font.family: root.fontFamily
@@ -467,6 +471,7 @@ Item {
 
             Text {
               text: ""
+              textFormat: Text.PlainText
               color: root.selectedText
               opacity: 0.8
               font.family: root.fontFamily
@@ -477,6 +482,7 @@ Item {
 
             Text {
               text: "No matches for “" + root.filterText + "”"
+              textFormat: Text.PlainText
               color: root.foreground
               opacity: 0.7
               font.family: root.fontFamily
