@@ -1,0 +1,23 @@
+-- Hyprland-side keybind for the anel.search plugin. Keybindings are owned
+-- by Hyprland's Lua config, not the shell, so this file is sourced from
+-- ~/.config/hypr/bindings.lua via dofile(...) rather than living inside
+-- the plugin's QML -- same split as anel.gestures.
+--
+-- SUPER + SEMICOLON: simple one-modifier chord. Confirmed free against
+-- the FULL keybindings listing (`omarchy menu keybindings --print`),
+-- not just a narrow grep -- learned that the hard way this time. Three
+-- worse picks first, in order:
+--   1. Bare SHIFT+SPACE, no modifier -- rejected before shipping, would've
+--      globally swallowed every Shift+Space keystroke (e.g. a plain space
+--      typed while Shift is briefly held mid-word, in any app).
+--   2. SUPER+K -- already "Keybindings" (cheat-sheet overlay).
+--   3. SUPER+ALT+CTRL+SPACE -- registered with no config errors, but
+--      3+ modifier chords (Ctrl+Alt especially) are prone to being
+--      intercepted before Hyprland ever sees them, and are just awkward
+--      to press reliably.
+--   4. SUPER+SLASH -- looked free from a naive text-based check
+--      (searched for the literal "/" character), but Hyprland's printed
+--      keybindings list renders it as "SLASH", and that combo was
+--      already "Monitor scaling up". Lesson: always grep the actual
+--      keysym name Hyprland prints, not the symbol itself.
+o.bind("SUPER + SEMICOLON", "Search", "omarchy-shell shell toggle anel.search")

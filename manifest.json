@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "anel.search",
+  "name": "Search",
+  "version": "1.0.0",
+  "author": "anel",
+  "license": "MIT",
+  "description": "Alfred/Raycast-style launcher: fuzzy search apps and files in one popup.",
+  "kinds": [
+    "overlay"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "Search.qml"
+  }
+}
