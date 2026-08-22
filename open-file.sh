@@ -1,37 +1,43 @@
 #!/bin/bash
-# Opens a file for the anel.search plugin.
+# Opens a file for the anel.search-v2 plugin.
 #
-# Plain `xdg-open` works fine for GUI-handled files (e.g. .odt ->
-# LibreOffice). It does NOT work for files whose default handler is a
-# terminal app (e.g. nvim, the default text/plain handler on this
-# system): launched with no TTY, it just sits there forever with nothing
-# visible. Confirmed live -- multiple stuck nvim/xdg-open processes piled
-# up, one even holding a swapfile lock on the file being "opened".
+# Uses `gio open` (same mechanism as file managers like Nautilus/Thunar)
+# to match the user's actual default application preferences. Falls back
+# to `xdg-open` if gio is unavailable.
 #
-# Tried wrapping terminal handlers in `xdg-terminal-exec` instead; that
-# didn't reliably open a visible window in this environment either, for
-# reasons not fully pinned down. Rather than keep chasing it, this just
-# skips launching a terminal handler entirely and reveals the containing
-# folder -- the file is still one click away, and nothing hangs.
+# v2 flags:
+#   --copy-path   Copy the file's absolute path to the clipboard (wl-copy)
+#   --open-parent Open the containing directory instead of the file
 set -euo pipefail
-path="${1:?usage: open-file.sh <path>}"
+
+action="open"
+while [[ "${1:-}" == --* ]]; do
+  case "$1" in
+    --copy-path)   action="copy-path"; shift ;;
+    --open-parent) action="open-parent"; shift ;;
+    *) shift ;;
+  esac
+done
+
+path="${1:?usage: open-file.sh [--copy-path|--open-parent] <path>}"
 parent="$(dirname -- "$path")"
 
-find_desktop_file() {
-  local id="$1" dir
-  for dir in "$HOME/.local/share/applications" /usr/local/share/applications /usr/share/applications; do
-    [ -f "$dir/$id" ] && { echo "$dir/$id"; return 0; }
-  done
-  return 1
-}
+if [ "$action" = "copy-path" ]; then
+  abs="$(realpath -- "$path" 2>/dev/null || echo "$path")"
+  printf '%s' "$abs" | wl-copy
+  exit 0
+fi
 
-mime=$(xdg-mime query filetype "$path" 2>/dev/null || true)
-desktop_id=$(xdg-mime query default "$mime" 2>/dev/null || true)
-desktop_file=""
-[ -n "$desktop_id" ] && desktop_file=$(find_desktop_file "$desktop_id" || true)
+if [ "$action" = "open-parent" ]; then
+  gio open "$parent" 2>/dev/null || xdg-open "$parent"
+  exit 0
+fi
 
-if [ -n "$desktop_file" ] && grep -q "^Terminal=true" "$desktop_file"; then
-  xdg-open "$parent"
+# Default action: open the file using gio (same as file managers).
+# gio open handles MIME type detection more accurately than xdg-open
+# and respects the same default-app preferences as the file manager.
+if command -v gio &>/dev/null; then
+  gio open "$path" || gio open "$parent"
 else
   xdg-open "$path" || xdg-open "$parent"
 fi
