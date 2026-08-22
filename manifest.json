@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "anel.search",
-  "name": "Search",
-  "version": "1.0.0",
+  "name": "Search v2",
+  "version": "2.0.0",
   "author": "anel",
   "license": "MIT",
-  "description": "Alfred/Raycast-style launcher: fuzzy search apps and files in one popup.",
+  "description": "Alfred/Raycast-style launcher v2: categorized search with preview pane, editable text cursor, and all apps on open.",
   "kinds": [
     "overlay"
   ],
